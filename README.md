@@ -1,5 +1,5 @@
 # GTNH's Forgelin
-Fork of [shadowfacts Forgelin](https://github.com/Emberwalker/Forgelin).
+Fork of [shadowfacts Forgelin](https://github.com/shadowfacts/Forgelin).
 
 ## Additions
 - Backport to 1.7.10
