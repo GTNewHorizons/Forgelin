@@ -1,7 +1,8 @@
-# Forgelin
-Fork of [Emberwalker's Forgelin](https://github.com/Emberwalker/Forgelin).
+# GTNH's Forgelin
+Fork of [shadowfacts Forgelin](https://github.com/Emberwalker/Forgelin).
 
 ## Additions
+- Backport to 1.7.10
 - Shades the Kotlin standard library, runtime, coroutines-core, and reflect libraries so you don't have to.
 - Provides a Forge `ILanguageAdapter` for using Kotlin `object` classes as your main mod class.
 
