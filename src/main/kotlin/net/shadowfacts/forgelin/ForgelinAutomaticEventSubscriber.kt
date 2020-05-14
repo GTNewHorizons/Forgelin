@@ -1,19 +1,21 @@
 package net.shadowfacts.forgelin
 
+import cpw.mods.fml.common.FMLCommonHandler
+import cpw.mods.fml.common.Loader
+import cpw.mods.fml.common.Mod
+import cpw.mods.fml.common.ModContainer
+import cpw.mods.fml.common.discovery.ASMDataTable
+import cpw.mods.fml.common.discovery.ASMDataTable.ASMData
+import cpw.mods.fml.common.discovery.asm.ModAnnotation
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import cpw.mods.fml.relauncher.Side
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.common.Loader
-import net.minecraftforge.fml.common.LoaderException
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.common.ModContainer
-import net.minecraftforge.fml.common.discovery.ASMDataTable
-import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData
-import net.minecraftforge.fml.common.discovery.asm.ModAnnotation.EnumHolder
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.relauncher.Side
 import org.apache.logging.log4j.LogManager
+import java.lang.reflect.Field
 import java.lang.reflect.Modifier
-import java.util.EnumSet
+import java.util.*
 import kotlin.reflect.full.companionObjectInstance
+import kotlin.reflect.jvm.jvmName
 
 object ForgelinAutomaticEventSubscriber {
 	private val DEFAULT_SUBSCRIPTION_SIDES = EnumSet.allOf(Side::class.java)
@@ -26,44 +28,46 @@ object ForgelinAutomaticEventSubscriber {
 		val modAnnotations = asm.getAnnotationsFor(mod) ?: return
 
 		val containedMods = modAnnotations.get(Mod::class.java.name)
-		val subscribers = modAnnotations.get(Mod.EventBusSubscriber::class.java.name)
+		val subscribers = modAnnotations.get(EventBusSubscriber::class.jvmName)
 				.filter { parseTargetSides(it).contains(currentSide) }
 
 		val loader = Loader.instance().modClassLoader
 
-
-		for (containedMod in containedMods) {
+		containedMods.forEach { containedMod ->
 			val containedModId = containedMod.annotationInfo["modid"] as String
+
 			if (containedMod.annotationInfo["modLanguageAdapter"] != KotlinAdapter::class.qualifiedName) {
 				LOGGER.debug("Skipping @EventBusSubscriber injection for {} since it does not use KotlinAdapter", containedModId)
-				continue
+				return@forEach
 			}
 
 			LOGGER.debug("Attempting to register Kotlin @EventBusSubscriber objects for {}", containedModId)
 
-			for (subscriber in subscribers) {
+			subscribers.forEach subscriber@{  subscriber ->
 				try {
 					val ownerModId = parseModId(containedMods, subscriber)
 					if (ownerModId.isNullOrEmpty()) {
 						LOGGER.debug("Could not determine owning mod for @EventBusSubscriber on {} for mod {}", subscriber.className, mod.modId)
-						continue
+						return@subscriber
 					}
 
 					if (containedModId != ownerModId) {
 						LOGGER.debug("Skipping @EventBusSubscriber injection for {} since it is not for mod {}", subscriber.className, containedModId)
-						continue
+						return@subscriber
 					}
 
-					val subscriberClass = Class.forName(subscriber.className, false, loader) ?: continue
+					val subscriberClass = Class.forName(subscriber.className, false, loader) ?: return@subscriber
 					val kotlinClass = subscriberClass.kotlin
-					val objectInstance = kotlinClass.objectInstance ?: kotlinClass.companionObjectInstance ?: continue
+					val objectInstance = kotlinClass.objectInstance ?: kotlinClass.companionObjectInstance ?: return@subscriber
 
 					if (!hasStaticEventHandlers(subscriberClass) && subscriberClass !in unregistered) {
+						FMLCommonHandler.instance().bus().unregister(subscriberClass)
 						MinecraftForge.EVENT_BUS.unregister(subscriberClass)
 						unregistered += subscriberClass
 						LOGGER.debug("Unregistered static @EventBusSubscriber class {}", subscriber.className)
 					}
 					if (hasObjectEventHandlers(objectInstance) && objectInstance !in registered) {
+						FMLCommonHandler.instance().bus().register(objectInstance)
 						MinecraftForge.EVENT_BUS.register(objectInstance)
 						registered += objectInstance
 						LOGGER.debug("Registered @EventBusSubscriber object instance {}", subscriber.className)
@@ -71,7 +75,7 @@ object ForgelinAutomaticEventSubscriber {
 
 				} catch (e: Throwable) {
 					LOGGER.error("An error occurred trying to load an @EventBusSubscriber object {} for modid {}", mod.modId, e)
-					throw LoaderException(e)
+					throw Exception(e)
 				}
 			}
 		}
@@ -95,18 +99,34 @@ object ForgelinAutomaticEventSubscriber {
 			return parsedModId
 		}
 
-		return ASMDataTable.getOwnerModID(containedMods, subscriber)
+		return getOwnerModID(containedMods, subscriber)
 	}
 
+	@Suppress("UNCHECKED_CAST")
 	private fun parseTargetSides(subscriber: ASMData): EnumSet<Side> {
-		val parsedSides: List<EnumHolder>? = subscriber.annotationInfo["value"] as? List<EnumHolder>
+		val parsedSides: List<ModAnnotation.EnumHolder>? = subscriber.annotationInfo["value"] as? List<ModAnnotation.EnumHolder>
 		if (parsedSides != null) {
 			val targetSides = EnumSet.noneOf(Side::class.java)
+			val value = ModAnnotation.EnumHolder::class.java.getDeclaredField("value")
+			value.isAccessible = true
 			for (parsed in parsedSides) {
-				targetSides.add(Side.valueOf(parsed.value))
+				targetSides.add(Side.valueOf(value.get(parsed) as String))
 			}
 			return targetSides
 		}
+
 		return DEFAULT_SUBSCRIPTION_SIDES
 	}
+
+	private fun getOwnerModID(mods: Set<ASMData>, targ: ASMData): String? {
+		return when (mods.size) {
+			1 -> {
+				mods.first().annotationInfo["modid"] as String?
+			}
+			else -> {
+				mods.firstOrNull{ e -> targ.className.startsWith(e.className)}?.annotationInfo?.get("modid") as String?
+			}
+		}
+	}
+
 }

@@ -1,9 +1,9 @@
 package net.shadowfacts.forgelin
 
-import net.minecraftforge.fml.common.FMLModContainer
-import net.minecraftforge.fml.common.ILanguageAdapter
-import net.minecraftforge.fml.common.ModContainer
-import net.minecraftforge.fml.relauncher.Side
+import cpw.mods.fml.common.FMLModContainer
+import cpw.mods.fml.common.ILanguageAdapter
+import cpw.mods.fml.common.ModContainer
+import cpw.mods.fml.relauncher.Side
 import org.apache.logging.log4j.LogManager
 import java.lang.reflect.Field
 import java.lang.reflect.Method
