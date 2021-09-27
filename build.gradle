@@ -1,9 +1,8 @@
 buildscript {
 	repositories {
-		mavenCentral()
 		maven {
 			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
+			url = "https://files.minecraftforge.net/maven"
 		}
 		maven {
 			name = "sonatype"
@@ -13,7 +12,6 @@ buildscript {
 			name = "jitpack"
 			url = "https://jitpack.io"
 		}
-		jcenter()
 	}
 	dependencies {
 		classpath "com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT"
@@ -22,11 +20,11 @@ buildscript {
 
 plugins {
 	id "com.github.johnrengelman.shadow" version "6.1.0"
-	id "org.jetbrains.kotlin.jvm" version "1.5.30"
+	id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
 }
 
-apply plugin: "forge"
 apply plugin: "signing"
+apply plugin: "forge"
 
 version = mod_version
 
@@ -53,11 +51,6 @@ processResources {
 	from (sourceSets.main.resources.srcDirs) {
 		exclude "mcmod.info"
 	}
-}
-
-repositories {
-	mavenCentral()
-	jcenter()
 }
 
 dependencies {
