@@ -8,7 +8,10 @@
 	  "credits": "Emberwalker, for the original Forgelin, shadowfacts for the fork",
 	  "url": "https://github.com/shadowfacts/Forgelin",
 	  "updateUrl": "",
-	  "authorList": [ "bartimaeusnek" ],
+	  "authorList": [ 
+      "bartimaeusnek", 
+      "Telan" 
+	  ],
 	  "screenshots": []
 	}
 ]
