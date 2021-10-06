@@ -12,6 +12,7 @@ buildscript {
 			name = "jitpack"
 			url = "https://jitpack.io"
 		}
+		mavenLocal()
 	}
 	dependencies {
 		classpath "com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT"
@@ -36,7 +37,7 @@ minecraft {
 	version = mc_version + "-" + forge_version + "-" + mc_version
 	runDir = "run"
 
-	replaceIn "Forgelin.kt"
+	replaceIn "src/main/kotlin/net/shadowfacts/forgelin/Forgelin.kt" // TODO: check if this actually works
 	replace "@VERSION@", mod_version
 }
 
@@ -54,13 +55,20 @@ processResources {
 }
 
 dependencies {
-	implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
-			"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-			"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
-			"org.jetbrains.kotlin:kotlin-reflect:$kotlin_version",
-			"org.jetbrains:annotations:$annotations_version",
+	implementation "org.jetbrains.kotlin:kotlin-stdlib",
+			"org.jetbrains.kotlin:kotlin-stdlib-jdk7",
+			"org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+			"org.jetbrains.kotlin:kotlin-reflect",
+			"org.jetbrains:annotations",
 			"org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version",
 			"org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutines_version"
+}
+
+configurations {
+	shadowImplementation {
+		extendsFrom implementation
+		canBeResolved = true
+	}
 }
 
 jar {
@@ -71,18 +79,12 @@ jar {
 }
 
 shadowJar {
-	classifier = ""
-	dependencies {
-		exclude "net\\minecraftforge\\**"
-		exclude "GradleStart*"
-		include(dependency("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"))
-		include(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"))
-		include(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"))
-		include(dependency("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"))
-		include(dependency("org.jetbrains:annotations:$annotations_version"))
-		include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"))
-		include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutines_version"))
-	}
+	archiveBaseName.set("")
+	archiveClassifier.set("")
+	archiveVersion.set("")
+
+	configurations = [project.configurations.shadowImplementation]
+	
 	manifest {
 		attributes "FMLCorePlugin": "net.shadowfacts.forgelin.preloader.ForgelinPlugin",
 					"FMLCorePluginContainsFMLMod": "true"
@@ -113,8 +115,8 @@ tasks.build.dependsOn reobfShadowJar
 task signJar(dependsOn: "reobf") {
 	doLast {
 		ant.signjar(
-				destDir: jar.destinationDir,
-				jar: jar.getArchivePath(),
+				destDir: jar.destinationDirectory,
+				jar: jar.archiveFile,
 				alias: findProperty("keyStoreAlias") ?: "",
 				keystore: findProperty("keyStore") ?: "",
 				storepass: findProperty("keyStorePass") ?: "",
