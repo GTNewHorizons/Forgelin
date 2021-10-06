@@ -12,7 +12,6 @@ buildscript {
 			name = "jitpack"
 			url = "https://jitpack.io"
 		}
-		mavenLocal()
 	}
 	dependencies {
 		classpath "com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT"
@@ -36,9 +35,6 @@ compileJava.options.encoding = "UTF-8"
 minecraft {
 	version = mc_version + "-" + forge_version + "-" + mc_version
 	runDir = "run"
-
-	replaceIn "src/main/kotlin/net/shadowfacts/forgelin/Forgelin.kt" // TODO: check if this actually works
-	replace "@VERSION@", mod_version
 }
 
 processResources {
@@ -79,10 +75,7 @@ jar {
 }
 
 shadowJar {
-	archiveBaseName.set("")
-	archiveClassifier.set("")
-	archiveVersion.set("")
-
+	classifier = ""
 	configurations = [project.configurations.shadowImplementation]
 	
 	manifest {
