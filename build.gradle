@@ -60,13 +60,6 @@ dependencies {
 			"org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutines_version"
 }
 
-configurations {
-	shadowImplementation {
-		extendsFrom implementation
-		canBeResolved = true
-	}
-}
-
 jar {
 	manifest {
 		attributes "FMLCorePlugin": "net.shadowfacts.forgelin.preloader.ForgelinPlugin",
@@ -76,8 +69,19 @@ jar {
 
 shadowJar {
 	classifier = ""
-	configurations = [project.configurations.shadowImplementation]
-	
+
+	dependencies {
+		exclude "net\\minecraftforge\\**"
+		exclude "GradleStart*"
+		include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
+		include(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk7"))
+		include(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk8"))
+		include(dependency("org.jetbrains.kotlin:kotlin-reflect"))
+		include(dependency("org.jetbrains:annotations"))
+		include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"))
+		include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutines_version"))
+	}
+
 	manifest {
 		attributes "FMLCorePlugin": "net.shadowfacts.forgelin.preloader.ForgelinPlugin",
 					"FMLCorePluginContainsFMLMod": "true"
