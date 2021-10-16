@@ -9,17 +9,18 @@ Fork of [shadowfacts Forgelin](https://github.com/shadowfacts/Forgelin).
 ## Usage
 ```groovy
 repositories {
-	jcenter()
-	maven {
-		url "http://maven.shadowfacts.net/"
-	}
+    mavenCentral()
+    maven {
+        name = "jitpack"
+        url = "https://jitpack.io"
+    }
 }
 
 dependencies {
-	compile group: "net.shadowfacts", name: "Forgelin", version: "LATEST_VERSION"
+    compile "com.github.GTNewHorizons:Forgelin:LATEST_VERSION"
 }
 ```
 
-All versions can be seen [here](http://maven.shadowfacts.net/net/shadowfacts/Forgelin/).
+All versions can be seen [here](https://jitpack.io/#GTNewHorizons/Forgelin).
 
-**Note:** You must have the `jcenter()` call in your `repositories` block. JCenter is used to host the Kotlin coroutines libraries.
+**Note:** You must have the `mavenCentral()` call in your `repositories` block. MavenCentral is used to host the Kotlin coroutines libraries.

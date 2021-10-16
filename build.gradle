@@ -70,6 +70,11 @@ jar {
 shadowJar {
 	classifier = ""
 
+	// to avoid java 9 metadata which is confusing for forge ASM reader, which expects to see only java 8 classes
+	exclude { FileTreeElement file ->
+		file.getPath().contains("META-INF") && file.name != "MANIFEST.MF"
+	}
+
 	dependencies {
 		exclude "net\\minecraftforge\\**"
 		exclude "GradleStart*"
@@ -82,10 +87,6 @@ shadowJar {
 		include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutines_version"))
 	}
 
-	manifest {
-		attributes "FMLCorePlugin": "net.shadowfacts.forgelin.preloader.ForgelinPlugin",
-					"FMLCorePluginContainsFMLMod": "true"
-	}
 }
 
 tasks.build.dependsOn shadowJar
@@ -123,4 +124,3 @@ task signJar(dependsOn: "reobf") {
 		)
 	}
 }
-
