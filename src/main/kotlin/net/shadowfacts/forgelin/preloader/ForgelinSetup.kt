@@ -12,7 +12,7 @@ class ForgelinSetup : IFMLCallHook {
             loader?.loadClass("net.shadowfacts.forgelin.KotlinAdapter")
         } catch (e: ClassNotFoundException) {
             // this should never happen
-            throw RuntimeException("Couldn't find Forgelin langague adapter, this shouldn't be happening", e)
+            throw RuntimeException("Couldn't find Forgelin language adapter, this shouldn't be happening", e)
         }
     }
 
