@@ -1,0 +1,11 @@
+// Add your dependencies here
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            "org.jetbrains.kotlin:kotlin-reflect",
+            "org.jetbrains:annotations",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2"
+}

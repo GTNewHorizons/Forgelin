@@ -1,9 +1,9 @@
 [
 	{
-	  "modid": "forgelin",
-	  "name": "GTNH's Forgelin 1.7.10",
-	  "version": "$version",
-	  "mcversion": "$mcversion",
+	  "modid": "${modId}",
+	  "name": "${modName}",
+	  "version": "${modVersion}",
+	  "mcversion": "${minecraftVersion}",
 	  "description": "Kotlin helper library for Forge. Minecraft 1.7.10 Port",
 	  "credits": "Emberwalker, for the original Forgelin, shadowfacts for the fork",
 	  "url": "https://github.com/shadowfacts/Forgelin",
