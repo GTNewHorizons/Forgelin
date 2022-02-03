@@ -271,6 +271,7 @@ repositories {
         name = "Overmind forge repo mirror"
         url = "https://gregtech.overminddl1.com/"
     }
+    mavenCentral()
     if(usesMixins.toBoolean()) {
         maven {
             name = "sponge"
