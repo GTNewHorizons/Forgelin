@@ -13,7 +13,7 @@ object Forgelin {
 
 	const val MOD_ID = "forgelin"
 	const val NAME = "Forgelin"
-	const val VERSION = "1.9.2-GTNH-1.7.10-Edition"
+	const val VERSION = "1.9.3-GTNH-1.7.10-Edition"
 
 	@Mod.EventHandler
 	fun onPreInit(event: FMLPreInitializationEvent) {
