@@ -1,11 +1,11 @@
 // Add your dependencies here
 
 dependencies {
-    shadeCompile("org.jetbrains.kotlin:kotlin-stdlib")
-    shadeCompile("org.jetbrains.kotlin:kotlin-stdlib-jdk7")
-    shadeCompile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    shadeCompile("org.jetbrains.kotlin:kotlin-reflect")
+    shadeCompile("org.jetbrains.kotlin:kotlin-stdlib:1.5.30")
+    shadeCompile("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.30")
+    shadeCompile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.30")
+    shadeCompile("org.jetbrains.kotlin:kotlin-reflect:1.5.30")
     shadeCompile("org.jetbrains:annotations")
-    shadeCompile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    shadeCompile("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0")
+    shadeCompile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    shadeCompile("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
 }

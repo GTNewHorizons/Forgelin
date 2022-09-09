@@ -8,7 +8,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent
 /**
  * @author shadowfacts
  */
-@Mod(modid = Forgelin.MOD_ID, name = Forgelin.NAME, version = "GRADLETOKEN_VERSION", acceptableRemoteVersions = "*", acceptedMinecraftVersions = "*", modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter")
+// kotlin doesn't work with the current variable substitute system, so...
+@Mod(modid = Forgelin.MOD_ID, name = Forgelin.NAME, version = "1.9.6-GTNH", acceptableRemoteVersions = "*", acceptedMinecraftVersions = "*", modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter")
 object Forgelin {
 
 	const val MOD_ID = "forgelin"
