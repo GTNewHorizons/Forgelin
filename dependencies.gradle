@@ -4,7 +4,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly("com.github.GTNewHorizons:GTNHLib:0.6.36:dev")
+    compileOnly("com.github.GTNewHorizons:GTNHLib:0.6.38:dev")
     shadowImplementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.10")
     shadowImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10")
     shadowImplementation("org.jetbrains.kotlin:kotlin-reflect:2.1.10")
